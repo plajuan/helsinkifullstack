@@ -1,6 +1,6 @@
 # Part 0 Exercises
 
-## New note diagram
+## 0.4: New note diagram
 
 ```mermaid
 sequenceDiagram
@@ -19,12 +19,12 @@ sequenceDiagram
 
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
     activate server
-    server-->>browser: the CSS file
+    server-->>browser: CSS file
     deactivate server
 
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.js
     activate server
-    server-->>browser: the JavaScript file
+    server-->>browser: JavaScript file
     deactivate server
 
     Note right of browser: The browser starts executing the JavaScript code that fetches the JSON from the server
@@ -38,4 +38,7 @@ sequenceDiagram
     browser->>browser: Create DOM with data.json
     deactivate browser
 ```
-`
+
+## 0.5: Single page app diagram
+
+## 0.6: New note in Single page app diagram
