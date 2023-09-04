@@ -40,5 +40,56 @@ sequenceDiagram
 ```
 
 ## 0.5: Single page app diagram
+```mermaid
+sequenceDiagram
+    participant browser
+    participant server
+
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/spa
+    activate server
+    server->>browser: HTML Document
+    deactivate server
+
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
+    activate server
+    server->>browser: CSS Document
+    deactivate server
+
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/spa.js
+    activate server
+    server->>browser: JS Document
+    deactivate server
+
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
+    activate server
+    server->>browser: JSON Document
+    deactivate server
+
+```
 
 ## 0.6: New note in Single page app diagram
+
+```mermaid
+sequenceDiagram
+    participant browser
+    participant server
+
+    browser->>server: POST https://studies.cs.helsinki.fi//exampleapp/new_note_spa
+    activate server
+    server-->>browser: HTML document
+    deactivate server
+
+    server->>server: Created JSON file
+    activate server    
+    deactivate server
+
+    server->>browser: GET https://studies.cs.helsinki.fi/exampleapp/data.json
+    activate server
+    server-->>browser: message	"note created"
+    deactivate server
+
+    activate browser
+    browser->>browser: window.onload
+    deactivate browser
+```
+
