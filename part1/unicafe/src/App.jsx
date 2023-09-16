@@ -6,7 +6,7 @@ const FeedAttribute = (props) => {
   )
 }
 
-const FeedButton = (props) => {
+const Button = (props) => {
   return (
     <button onClick={props.click}>
       {props.text}
@@ -14,7 +14,7 @@ const FeedButton = (props) => {
   )
 }
 
-const FeedVote = (props) => {  
+const StatisticLine = (props) => {  
   return(
     <p>{props.text} {props.votes} {props.suffix}</p>
   )
@@ -25,9 +25,9 @@ const Statistics = (props)=>{
     return (
       <div>
       <FeedAttribute text="give feedback" />
-      <FeedButton text="good" click={ props.goodClick }/>
-      <FeedButton text="neutral" click= { props.neutralClick } />
-      <FeedButton text="bad" click= { props.badClick } />
+      <Button text="good" click={ props.goodClick }/>
+      <Button text="neutral" click= { props.neutralClick } />
+      <Button text="bad" click= { props.badClick } />
       <FeedAttribute text="statistics" />
         <p>No feedback given</p>
       </div>
@@ -37,16 +37,16 @@ const Statistics = (props)=>{
   return(    
     <div>
       <FeedAttribute text="give feedback" />
-      <FeedButton text="good" click={ props.goodClick }/>
-      <FeedButton text="neutral" click= { props.neutralClick } />
-      <FeedButton text="bad" click= { props.badClick } />
+      <Button text="good" click={ props.goodClick }/>
+      <Button text="neutral" click= { props.neutralClick } />
+      <Button text="bad" click= { props.badClick } />
       <FeedAttribute text="statistics" />
-      <FeedVote text="good" votes={props.good} />
-      <FeedVote text="neutral" votes={props.neutral} />
-      <FeedVote text="bad" votes={props.bad} />
-      <FeedVote text="all" votes={ props.all } />
-      <FeedVote text="average" votes={ props.average} />
-      <FeedVote text="positive" votes={ props.positive } suffix="%" />
+      <StatisticLine text="good" votes={props.good} />
+      <StatisticLine text="neutral" votes={props.neutral} />
+      <StatisticLine text="bad" votes={props.bad} />
+      <StatisticLine text="all" votes={ props.all } />
+      <StatisticLine text="average" votes={ props.average} />
+      <StatisticLine text="positive" votes={ props.positive } suffix="%" />
       
     </div>
   ) 
