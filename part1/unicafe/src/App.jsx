@@ -21,8 +21,20 @@ const FeedVote = (props) => {
 }
 
 const Statistics = (props)=>{
-  return(
-<>    
+  if (props.all == 0){
+    return (
+      <div>
+      <FeedAttribute text="give feedback" />
+      <FeedButton text="good" click={ props.goodClick }/>
+      <FeedButton text="neutral" click= { props.neutralClick } />
+      <FeedButton text="bad" click= { props.badClick } />
+      <FeedAttribute text="statistics" />
+        <p>No feedback given</p>
+      </div>
+    )
+  } 
+  
+  return(    
     <div>
       <FeedAttribute text="give feedback" />
       <FeedButton text="good" click={ props.goodClick }/>
@@ -37,7 +49,6 @@ const Statistics = (props)=>{
       <FeedVote text="positive" votes={ props.positive } suffix="%" />
       
     </div>
-    </>
   ) 
 }
 
