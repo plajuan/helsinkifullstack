@@ -38,6 +38,8 @@ const App = () => {
       <FeedVote text="neutral" votes={neutral} />
       <FeedVote text="bad" votes={bad} />
       <FeedVote text="all" votes={good+neutral+bad} />
+      <p>average {(good-bad)/(good+neutral+bad)}</p>
+      <p>positive { (good/(good+neutral+bad))*100 } %</p>
     </div>
   )
 }
