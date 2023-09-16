@@ -20,6 +20,26 @@ const FeedVote = (props) => {
   )
 }
 
+const Statistics = (props)=>{
+  return(
+<>    
+    <div>
+      <FeedAttribute text="give feedback" />
+      <FeedButton text="good" click={ props.goodClick }/>
+      <FeedButton text="neutral" click= { props.neutralClick } />
+      <FeedButton text="bad" click= { props.badClick } />
+      <FeedAttribute text="statistics" />
+      <FeedVote text="good" votes={props.good} />
+      <FeedVote text="neutral" votes={props.neutral} />
+      <FeedVote text="bad" votes={props.bad} />
+      <FeedVote text="all" votes={ props.all } />
+      <FeedVote text="average" votes={ props.average} />
+      <FeedVote text="positive" votes={ props.positive } suffix="%" />
+      
+    </div>
+    </>
+  ) 
+}
 
 const App = () => {
   // salve os cliques de cada botão em seu próprio estado
@@ -55,23 +75,8 @@ const App = () => {
   }
 
   return (
-    <>
-    
-    <div>
-      <FeedAttribute text="give feedback" />
-      <FeedButton text="good" click={ goodClick }/>
-      <FeedButton text="neutral" click= { neutralClick } />
-      <FeedButton text="bad" click= { badClick } />
-      <FeedAttribute text="statistics" />
-      <FeedVote text="good" votes={good} />
-      <FeedVote text="neutral" votes={neutral} />
-      <FeedVote text="bad" votes={bad} />
-      <FeedVote text="all" votes={ all } />
-      <FeedVote text="average" votes={ average} />
-      <FeedVote text="positive" votes={ positive } suffix="%" />
-      
-    </div>
-    </>
+    <Statistics goodClick={goodClick} neutralClick={neutralClick} badClick={badClick}
+      good={good} neutral={neutral} bad={bad} all={all} average={average} positive={positive} />
   )
 }
 
