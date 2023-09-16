@@ -16,7 +16,10 @@ const Button = (props) => {
 
 const StatisticLine = (props) => {  
   return(
-    <p>{props.text} {props.votes} {props.suffix}</p>
+    <tr>
+      <td>{props.text}</td>
+      <td>{props.votes} {props.suffix}</td>    
+    </tr>
   )
 }
 
@@ -41,13 +44,16 @@ const Statistics = (props)=>{
       <Button text="neutral" click= { props.neutralClick } />
       <Button text="bad" click= { props.badClick } />
       <FeedAttribute text="statistics" />
+      <table>
+        <tbody>
       <StatisticLine text="good" votes={props.good} />
       <StatisticLine text="neutral" votes={props.neutral} />
       <StatisticLine text="bad" votes={props.bad} />
       <StatisticLine text="all" votes={ props.all } />
       <StatisticLine text="average" votes={ props.average} />
       <StatisticLine text="positive" votes={ props.positive } suffix="%" />
-      
+      </tbody>
+      </table>
     </div>
   ) 
 }
