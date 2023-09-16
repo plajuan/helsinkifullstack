@@ -26,22 +26,52 @@ const App = () => {
   const [good, setGood] = useState(0)
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
+  const [all, setAll] = useState(0)
+  const [average, setAverage] = useState(0)
+  const [positive, setPositive] = useState(0)
+
+  const updateAll = (good,neutral,bad) =>{
+    setAll(good+neutral+bad)
+    setAverage((good-bad)/(good+neutral+bad))
+    setPositive((good/(good+neutral+bad))*100)
+  }
+  
+  const goodClick = () =>{
+    const goodTemp = good+1
+    setGood(goodTemp)
+    updateAll(goodTemp, neutral, bad)
+  }
+
+  const neutralClick = () =>{
+    const neutralTemp = neutral+1 
+    setNeutral(neutralTemp)
+    updateAll(good, neutralTemp, bad)
+  }
+
+  const badClick = ()=>{
+    const badTemp = bad+1
+    setBad(badTemp)
+    updateAll(good, neutral, badTemp)
+  }
 
   return (
+    <>
+    
     <div>
       <FeedAttribute text="give feedback" />
-      <FeedButton text="good" click={ ()=>setGood(good+1) }/>
-      <FeedButton text="neutral" click= { ()=>setNeutral(neutral+1) } />
-      <FeedButton text="bad" click= { ()=>setBad(bad+1) } />
+      <FeedButton text="good" click={ goodClick }/>
+      <FeedButton text="neutral" click= { neutralClick } />
+      <FeedButton text="bad" click= { badClick } />
       <FeedAttribute text="statistics" />
       <FeedVote text="good" votes={good} />
       <FeedVote text="neutral" votes={neutral} />
       <FeedVote text="bad" votes={bad} />
-      <FeedVote text="all" votes={good+neutral+bad} />
-      <FeedVote text="average" votes={(good-bad)/(good+neutral+bad)} />
-      <FeedVote text="positive" votes={ (good/(good+neutral+bad))*100 } suffix="%" />
+      <FeedVote text="all" votes={ all } />
+      <FeedVote text="average" votes={ average} />
+      <FeedVote text="positive" votes={ positive } suffix="%" />
       
     </div>
+    </>
   )
 }
 
