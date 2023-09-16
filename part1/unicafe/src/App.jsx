@@ -16,7 +16,7 @@ const FeedButton = (props) => {
 
 const FeedVote = (props) => {  
   return(
-    <p>{props.text} {props.votes}</p>
+    <p>{props.text} {props.votes} {props.suffix}</p>
   )
 }
 
@@ -38,8 +38,9 @@ const App = () => {
       <FeedVote text="neutral" votes={neutral} />
       <FeedVote text="bad" votes={bad} />
       <FeedVote text="all" votes={good+neutral+bad} />
-      <p>average {(good-bad)/(good+neutral+bad)}</p>
-      <p>positive { (good/(good+neutral+bad))*100 } %</p>
+      <FeedVote text="average" votes={(good-bad)/(good+neutral+bad)} />
+      <FeedVote text="positive" votes={ (good/(good+neutral+bad))*100 } suffix="%" />
+      
     </div>
   )
 }
