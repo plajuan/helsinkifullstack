@@ -14,5 +14,6 @@ https://fullstackopen.com/en/part0/fundamentals_of_web_apps
 https://fullstackopen.com/ptbr/part1/
 
 2023-09-05 19:00 - 21:00
-2023-09-10 07:30 - 
+2023-09-10 07:30 - 09:30
+2023-09-16 08:30 - 11:00
 
