@@ -11,14 +11,31 @@ const App = () => {
     'Programar sem o uso extremamente intenso do console.log é o mesmo que um médico se recusar a usar raio-x ou testes sanguíneos ao diagnosticar pacientes.',
     'A única maneira de ir rápido é ir bem.'
   ]
-   
-  const [selected, setSelected] = useState(0)
+  
+  function random(){
+    return Math.floor(Math.random() * ( (anecdotes.length-1) - 0 + 1)) + 0;
+  }
 
+  function addVotes(){
+    const arr = [...votes]
+    arr[selected] += 1
+    setVotes(arr)
+  }
+  
+  const [selected, setSelected] = useState(random())  
+  const [votes, setVotes] = useState( anecdotes.map( (x)=> 0 ) )
+  console.log('selected', selected)
+  console.log('votes', votes)
   return (
     <div>
       {anecdotes[selected]}
       <br></br>
-      <button onClick={()=>setSelected(Math.floor(Math.random() * ( (anecdotes.length-1) - 0 + 1)) + 0)}>next anecdote</button>
+      has {votes[selected]} votes
+      <br></br>
+      <button onClick={()=>addVotes()}>vote</button>
+      <button onClick={()=>setSelected(random())}>
+        next anecdote
+      </button>      
     </div>
   )
 }
