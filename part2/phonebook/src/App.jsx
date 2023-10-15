@@ -15,7 +15,19 @@ const App = () => {
     event.preventDefault()
     console.log('Button clicked:', event.target)
     let arr = [...persons]
-    arr.push({name:newName})
+    let addToNameArr = true
+    arr.forEach(x=>{
+      if(x.name.toLowerCase() === newName.toLowerCase()){
+        addToNameArr = false
+        window.alert(`${newName} is already added to phonebook`)
+        return
+      } 
+    })
+    if (addToNameArr){
+      arr.push({name:newName})
+      setNewName('')
+    }      
+
     setPersons(arr);
   }
 
