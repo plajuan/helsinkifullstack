@@ -3,12 +3,18 @@ import { useState } from 'react'
 
 const App = () => {
   const [persons, setPersons] = useState([
-    { name: 'Arto Hellas' }
+    { name: 'Arto Hellas', number: '040-1234567'}
   ]) 
-  const [newName, setNewName] = useState('A new name...')
+  
+  const [newName, setNewName] = useState('')
   const newNameOnChange = (event) =>{
     console.log(event.target.value)
     setNewName(event.target.value)
+  }
+
+  const [newNumber, setNewNumber] = useState('')
+  const newNumberOnChange = (event) => {
+    setNewNumber(event.target.value)
   }
 
   const addPerson = (event) =>{
@@ -24,11 +30,12 @@ const App = () => {
       } 
     })
     if (addToNameArr){
-      arr.push({name:newName})
+      arr.push({name:newName, number:newNumber})
       setNewName('')
+      setNewNumber('')
     }      
 
-    setPersons(arr);
+    setPersons(arr);    
   }
 
   return (
@@ -39,6 +46,9 @@ const App = () => {
           name: <input id='nameIn' name='nameIn' value={newName} onChange={newNameOnChange}/>
         </div>
         <div>
+          number: <input id='numberIn' name='numberIn' value={newNumber} onChange={newNumberOnChange} />
+        </div>
+        <div>
           <button type="submit" id='addSub' name='addSub'>add</button>
         </div>
       </form>
@@ -46,7 +56,7 @@ const App = () => {
       {
         persons.map( item =>{
           return (
-            <p>{item.name}</p>
+            <p>{item.name} {item.number}</p>
           )
         })
       }
