@@ -1,5 +1,36 @@
 import { useState } from 'react'
 
+const Filter = (props) => {
+  return (
+    <div>
+        filter shown with <input id='filterIn' type="text" onChange={props.filterTextChange} />
+    </div>
+  )  
+}
+
+const PersonForm = (props) => {
+  return (
+  <>
+    <form id='form1' onSubmit={props.submit}>
+    <div>
+      name: <input id='nameIn' name='nameIn' value={props.newName} onChange={props.newNameOnChange}/>
+    </div>
+    <div>
+      number: <input id='numberIn' name='numberIn' value={props.newNumber} onChange={props.newNumberOnChange} />
+    </div>
+    <div>
+      <button type="submit" id='addSub' name='addSub'>add</button>
+    </div>
+    </form>
+  </>
+  )
+}
+
+const Persons = (props) => {
+  return props.persons
+        .filter( x => x.name.toLowerCase().indexOf(props.filterText.toLowerCase()) !== -1 )
+        .map( item => <p key={item.id}>{item.name} {item.number}</p> )
+}
 
 const App = () => {
   const [personsKey, setPersonsKey] = useState(4);
@@ -8,7 +39,7 @@ const App = () => {
     { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
     { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
     { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 }
-  ]) 
+  ])
   
   const [newName, setNewName] = useState('')
   const newNameOnChange = (event) =>{
@@ -31,6 +62,11 @@ const App = () => {
     console.log('Button clicked:', event.target)
     let arr = [...persons]
     let addToNameArr = true
+
+    if (newName === '' || newNumber === ''){
+      return
+    }
+
     arr.forEach(x=>{
       if(x.name.toLowerCase() === newName.toLowerCase()){
         addToNameArr = false
@@ -52,31 +88,15 @@ const App = () => {
   return (
     <div>      
       <h2>Phonebook</h2>
-      <div>
-        filter shown with <input id='filterIn' type="text" onChange={filterTextChange} />
-      </div>
-      <h2>add a new</h2>      
-      <form id='form1' onSubmit={addPerson}>
-        <div>
-          name: <input id='nameIn' name='nameIn' value={newName} onChange={newNameOnChange}/>
-        </div>
-        <div>
-          number: <input id='numberIn' name='numberIn' value={newNumber} onChange={newNumberOnChange} />
-        </div>
-        <div>
-          <button type="submit" id='addSub' name='addSub'>add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
-      {
-        persons
-        .filter(x => x.name.toLowerCase().indexOf(filterText.toLowerCase()) !== -1)
-        .map( item =>{
-          return (
-            <p key={item.id}>{item.name} {item.number}</p>
-          )
-        })
-      }
+      <Filter filterTextChange={filterTextChange}/>      
+      <h3>Add a new</h3>
+      <PersonForm 
+        submit={addPerson} 
+        newName={newName} newNameOnChange={newNameOnChange} 
+        newNumber={newNumber} newNumberOnChange={newNumberOnChange}
+      />
+      <h3>Numbers</h3>
+      <Persons persons={persons} filterText={filterText} />      
     </div>
   )
 }
