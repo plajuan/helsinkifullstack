@@ -35,15 +35,18 @@ const Persons = (props) => {
 
 const App = () => {
   const [personsKey, setPersonsKey] = useState(0);
-  const [persons, setPersons] = useState([])
+  const [persons, setPersons] = useState([]);
   
-  useEffect( () => {
-    axios.get('http://localhost:3001/persons')
+  const getPersons = () => {
+    axios
+      .get('http://localhost:3001/persons')
       .then(resp => {
-        setPersons(resp.data)
-        setPersonsKey(persons.length)
+        setPersons(resp.data);
+        setPersonsKey(persons.length);
       })
-  }, [] )
+  }
+  const config = []
+  useEffect(getPersons, config);
 
   const [newName, setNewName] = useState('')
   const newNameOnChange = (event) =>{
