@@ -14,10 +14,12 @@ const PersonForm = (props) => {
   <>
     <form id='form1' onSubmit={props.submit}>
     <div>
-      name: <input id='nameIn' name='nameIn' value={props.newName} onChange={props.newNameOnChange}/>
+      <label htmlFor="nameIn">name:</label>       
+      <input id='nameIn' name='nameIn' value={props.newName} onChange={props.newNameOnChange}/>
     </div>
     <div>
-      number: <input id='numberIn' name='numberIn' value={props.newNumber} onChange={props.newNumberOnChange} />
+      <label htmlFor="numberIn">number:</label>
+      <input id='numberIn' name='numberIn' value={props.newNumber} onChange={props.newNumberOnChange} />
     </div>
     <div>
       <button type="submit" id='addSub' name='addSub'>add</button>
