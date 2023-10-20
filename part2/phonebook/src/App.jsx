@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios';
+import connect from './services/connect'
 
 const Filter = (props) => {
   return (
@@ -39,11 +39,7 @@ const App = () => {
   const [persons, setPersons] = useState([]);
   
   const getPersons = () => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(resp => {
-        setPersons(resp.data);        
-      })
+    connect.getAll().then( (resp) => {setPersons(resp.data);} );
   }
   const config = []
   useEffect(getPersons, config);
@@ -83,17 +79,13 @@ const App = () => {
     })
     if (addToNameArr){
       const it = {name:newName, number:newNumber}      
-      axios
-        .post('http://localhost:3001/persons', it)
-        .then(response => { 
-          console.log(response.data);
-          arr.push(it);
-          setPersons(arr);
-          setNewName('');
-          setNewNumber('');
-        })
-    }      
-
+      connect.newPerson(it).then( (resp) => {
+        arr.push(it);
+        setPersons(arr);
+        setNewName('');
+        setNewNumber('');
+      });      
+    }
   }
 
   return (
