@@ -33,16 +33,14 @@ const Persons = (props) => {
         .map( item => <p key={item.id}>{item.name} {item.number}</p> )
 }
 
-const App = () => {
-  const [personsKey, setPersonsKey] = useState(0);
+const App = () => {  
   const [persons, setPersons] = useState([]);
   
   const getPersons = () => {
     axios
       .get('http://localhost:3001/persons')
       .then(resp => {
-        setPersons(resp.data);
-        setPersonsKey(persons.length);
+        setPersons(resp.data);        
       })
   }
   const config = []
@@ -82,14 +80,18 @@ const App = () => {
       } 
     })
     if (addToNameArr){
-      const newPersonKey = personsKey + 1;
-      arr.push({name:newName, number:newNumber, id:newPersonKey})
-      setNewName('')
-      setNewNumber('')
-      setPersonsKey(newPersonKey)
+      const it = {name:newName, number:newNumber}      
+      axios
+        .post('http://localhost:3001/persons', it)
+        .then(response => { 
+          console.log(response.data);
+          arr.push(it);
+          setPersons(arr);
+          setNewName('');
+          setNewNumber('');
+        })
     }      
 
-    setPersons(arr);    
   }
 
   return (
