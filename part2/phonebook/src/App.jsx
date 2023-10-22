@@ -57,16 +57,27 @@ const Persons = (props) => {
     );
 }
 
+const Showdiv = ({Msg, Class}) => {    
+  if (Msg === ''){
+      return null
+  }
+  return (
+    <div className={Class}>
+      <em>{Msg}</em>
+    </div>
+  )
+}
+
 const App = () => {  
   const [persons, setPersons] = useState([]);
   
   const getPersons = () => {
     connect.getAll().then( (resp) => {setPersons(resp.data);} );
   }
-  const config = []
+  const config = [];
   useEffect(getPersons, config);
 
-  const [newName, setNewName] = useState('')
+  const [newName, setNewName] = useState('');
   const newNameOnChange = (event) =>{
     //console.log(event.target.value)
     setNewName(event.target.value)
@@ -82,6 +93,8 @@ const App = () => {
     setFilterText(event.target.value)    
   }
 
+  const [messages, setMessages] = useState({text: '', class: ''});
+
   const delPerson = (event) => {
     event.preventDefault();
     let arr = [...persons]
@@ -93,8 +106,14 @@ const App = () => {
             return it.id != event.target.id
           });          
           setPersons(arr);
+          setMessages({text: `${event.target.name} removed!`, class: 'success'});
+          setTimeout( ()=> setMessages({text:'', class:''}), 3000);
         })
-        .catch(() => window.alert('Operation failed!'));
+        .catch(() => {
+          setMessages({text: `Failed to remove ${event.target.name}`, class: 'error'});
+          setTimeout( ()=> setMessages({text:'', class:''}), 3000);
+        }
+        );
     }
     
   }
@@ -127,20 +146,33 @@ const App = () => {
     })
     if (state === states[0]){
       const it = {name:newName, number:newNumber};
-      connect.newPerson(it).then( (resp) => {        
+      connect.newPerson(it)
+      .then( (resp) => {        
+        setMessages({text: `${newName} added to phonebook.`, class: 'success'});
+        setTimeout( ()=> setMessages({text:'', class:''}), 3000);
         arr.push(resp.data);
         setPersons(arr);
         setNewName('');
         setNewNumber('');
+        
+      })
+      .catch( () => {
+        setMessages({text: `Error when adding ${newName} to phonebook.`, class: 'error'});
+        setTimeout( ()=> setMessages({text:'', class:''}), 3000);
       });
     } else if (state === states[2]){
       const it = {name:newName, number:newNumber};
       connect.updatePersonPhone(id, it).then( (resp) => {
+        setMessages({text: `${newName} phone number updated.`, class: 'success'});
+        setTimeout( ()=> setMessages({text:'', class:''}), 3000);
         arr = arr.filter(x => x.id != id);
         arr.push(resp.data);
         setPersons(arr);
         setNewName('');
         setNewNumber('');
+      }).catch( () => {
+        setMessages({text: `Error when updating ${newName} phone number.`, class: 'error'});
+        setTimeout( ()=> setMessages({text:'', class:''}), 3000);
       });
     }
   }
@@ -148,6 +180,7 @@ const App = () => {
   return (
     <div>      
       <h2>Phonebook</h2>
+      <Showdiv Msg={messages.text} Class={messages.class} />
       <Filter filterTextChange={filterTextChange}/>      
       <h3>Add a new</h3>
       <PersonForm 
