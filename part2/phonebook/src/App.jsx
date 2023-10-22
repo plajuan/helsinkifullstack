@@ -29,10 +29,32 @@ const PersonForm = (props) => {
   )
 }
 
-const Persons = (props) => {
-  return props.persons
+const Persons = (props) => {  
+  const persons = props.persons
         .filter( x => x.name.toLowerCase().indexOf(props.filterText.toLowerCase()) !== -1 )
-        .map( item => <p key={item.id}>{item.name} {item.number}</p> )
+        .map( item => {
+          return (
+            <li key={item.id+'li'} id={item.id+'li'} className='no-bullets'>
+              {item.name} {item.number} &nbsp;
+              <button type="submit" 
+                key={item.id} 
+                id={item.id} 
+                name={item.name}
+                onClick={props.delPerson}>
+                  delete
+              </button>
+            </li>
+          )
+        }  );
+  return (
+    <>
+    <form action='submit' id='personsFormID'>
+      <ul className='no-bullets'>
+      {persons}
+      </ul>
+    </form>
+    </>
+    );
 }
 
 const App = () => {  
@@ -46,7 +68,7 @@ const App = () => {
 
   const [newName, setNewName] = useState('')
   const newNameOnChange = (event) =>{
-    console.log(event.target.value)
+    //console.log(event.target.value)
     setNewName(event.target.value)
   }
 
@@ -60,9 +82,26 @@ const App = () => {
     setFilterText(event.target.value)    
   }
 
+  const delPerson = (event) => {
+    event.preventDefault();
+    let arr = [...persons]
+
+    if (window.confirm(`Delete ${event.target.name}?`)){
+      connect.delPerson(event.target.id)
+        .then(() => {
+          arr = arr.filter(it => {            
+            return it.id != event.target.id
+          });          
+          setPersons(arr);
+        })
+        .catch(() => window.alert('Operation failed!'));
+    }
+    
+  }
+
   const addPerson = (event) =>{
     event.preventDefault()
-    console.log('Button clicked:', event.target)
+    //console.log('Button clicked:', event.target)
     let arr = [...persons]
     let addToNameArr = true
 
@@ -79,8 +118,8 @@ const App = () => {
     })
     if (addToNameArr){
       const it = {name:newName, number:newNumber}      
-      connect.newPerson(it).then( (resp) => {
-        arr.push(it);
+      connect.newPerson(it).then( (resp) => {        
+        arr.push(resp.data);
         setPersons(arr);
         setNewName('');
         setNewNumber('');
@@ -99,7 +138,7 @@ const App = () => {
         newNumber={newNumber} newNumberOnChange={newNumberOnChange}
       />
       <h3>Numbers</h3>
-      <Persons persons={persons} filterText={filterText} />      
+      <Persons persons={persons} filterText={filterText} delPerson={delPerson} />      
     </div>
   )
 }
