@@ -100,10 +100,11 @@ const App = () => {
   }
 
   const addPerson = (event) =>{
-    event.preventDefault()
-    //console.log('Button clicked:', event.target)
-    let arr = [...persons]
-    let addToNameArr = true
+    event.preventDefault();    
+    let arr = [...persons];    
+    let states = ['NAME_NOT_EXISTS', 'NAME_EXISTS', 'DIFFERENT_PHONE'];
+    let state = states[0];
+    let id = 0;
 
     if (newName === '' || newNumber === ''){
       return
@@ -111,19 +112,36 @@ const App = () => {
 
     arr.forEach(x=>{
       if(x.name.toLowerCase() === newName.toLowerCase()){
-        addToNameArr = false
-        window.alert(`${newName} is already added to phonebook`)
-        return
+        if (x.number === newNumber) {
+          state = states[1];
+          window.alert(`${newName} is already added to phonebook`);
+          return
+        } else {
+          if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)){
+            state = states[2];
+            id = x.id;
+          }          
+          return
+        }
       } 
     })
-    if (addToNameArr){
-      const it = {name:newName, number:newNumber}      
+    if (state === states[0]){
+      const it = {name:newName, number:newNumber};
       connect.newPerson(it).then( (resp) => {        
         arr.push(resp.data);
         setPersons(arr);
         setNewName('');
         setNewNumber('');
-      });      
+      });
+    } else if (state === states[2]){
+      const it = {name:newName, number:newNumber};
+      connect.updatePersonPhone(id, it).then( (resp) => {
+        arr = arr.filter(x => x.id != id);
+        arr.push(resp.data);
+        setPersons(arr);
+        setNewName('');
+        setNewNumber('');
+      });
     }
   }
 
