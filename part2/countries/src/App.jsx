@@ -12,13 +12,14 @@ const Filter = (props) =>{
 }
 
 const CoutriesList = (props) => {
-  if (!props.filterText){
+  if (props.filterText[0] === ''){
     return
   }
-  //TODO IF EXACT X.NAME == FILTERTEXT
-  const countries = props.countries
-    .filter(x => x.name.common.toLowerCase().indexOf(props.filterText.toLowerCase()) !== -1)
-    
+  
+  const countries = props.filterText[1] === '0' ?
+      props.countries.filter(x => x.name.common.toLowerCase().indexOf(props.filterText[0].toLowerCase()) !== -1)
+    :
+      props.countries.filter(x => x.name.common.toLowerCase() === props.filterText[0].toLowerCase())
 
   if (countries.length > 10){
     return <p>Too many matches, specify another filter</p>
@@ -27,7 +28,7 @@ const CoutriesList = (props) => {
     return (
       <>      
         {countries.map(x => { return (          
-          <p key={x.name.common} id={x.name.common}>
+          <p key={x.name.common+"p"} id={x.name.common+"p"}>
             {x.name.common}
             &nbsp; 
             <button type="button" onClick={props.showCountry} key={x.name.common} id={x.name.common}>show</button>
@@ -82,15 +83,15 @@ const App = () => {
   const config = []
   useEffect(getCountries, config)
 
-  const [filterText, setFilterText] = useState('')
+  const [filterText, setFilterText] = useState(['', '0'])
   const filterTextChange = (event) => {
-    setFilterText(event.target.value)
+    setFilterText([event.target.value,'0'])
   }
 
  
   const showCountry = (event)=>{
     console.log(event.target.id)
-    setFilterText(event.target.id)
+    setFilterText([event.target.id,'1'])
   }
 
   return (
