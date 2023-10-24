@@ -15,6 +15,7 @@ const CoutriesList = (props) => {
   if (!props.filterText){
     return
   }
+  //TODO IF EXACT X.NAME == FILTERTEXT
   const countries = props.countries
     .filter(x => x.name.common.toLowerCase().indexOf(props.filterText.toLowerCase()) !== -1)
     
@@ -24,10 +25,15 @@ const CoutriesList = (props) => {
   }
   if (countries.length > 1){
     return (
-      <>
-      <ol>
-        {countries.map(x => <li key={x.name.common} id={x.name.common}>{x.name.common}</li>)}
-      </ol>
+      <>      
+        {countries.map(x => { return (          
+          <p key={x.name.common} id={x.name.common}>
+            {x.name.common}
+            &nbsp; 
+            <button type="button" onClick={props.showCountry} key={x.name.common} id={x.name.common}>show</button>
+          </p>
+        )        
+        })}      
       </>
     )
   }
@@ -81,13 +87,18 @@ const App = () => {
     setFilterText(event.target.value)
   }
 
+ 
+  const showCountry = (event)=>{
+    console.log(event.target.id)
+    setFilterText(event.target.id)
+  }
+
   return (
     <div>
       <Filter filterTextChange={filterTextChange} filterText={filterText} />
-      <CoutriesList countries={countries} filterText={filterText} />
+      <CoutriesList countries={countries} filterText={filterText} showCountry={showCountry}/>
     </div>  
-    //TODO Impl https://studies.cs.helsinki.fi/restcountries/ in axios
-    //exercise 2.18 
+    
     //https://fullstackopen.com/en/part2/adding_styles_to_react_app
   )
 }
