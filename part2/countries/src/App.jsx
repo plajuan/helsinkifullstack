@@ -11,8 +11,7 @@ const Filter = (props) =>{
   )
 }
 
-const CoutriesList = (props) => {
-  //props.setCapital('')
+const CoutriesList = (props) => {  
   if (props.filterText[0] === ''){
     return
   }
@@ -40,13 +39,54 @@ const CoutriesList = (props) => {
     )
   }
   if (countries.length == 1){
-    const country = countries[0]
-    props.setCapital(country.capital[0])    
+    return (<Country country={countries[0]}/>)    
+  } else {    
+    return
+  }
+  
+}
+
+const Country = ({country}) => {
+  const [weather, setWeather] = useState([])
+  
+  useEffect( ()=> {
+    const url = `http://api.openweathermap.org/data/2.5/weather?q=${country.name.common}&appid=${import.meta.env.VITE_WEATHER_API}`
+    axios.get(url).then(x=>{setWeather(x.data)})
+  })
+
+    
+  if(weather.length > 0){    
     return (
       <>
       <h3>{country.name.common}</h3>
       <p key='p1'>
-            capital&nbsp;{country.capital.map(x => x).join(' ')} <br></br>
+            capital&nbsp;{country.capital[0]} <br></br>
+            area&nbsp;{country.area}
+          </p>
+          <h4>languages</h4>
+          <ul>
+            {Object.keys(country.languages).map( (key, index) => {
+              return (
+                <li key={index}>                  
+                    {country.languages[key]}      
+                </li>
+              );
+            }
+            )}
+          </ul>          
+          <img src={country.flags.svg} alt={country.name.common} width='20%' />
+          <h3>Weather in {country.capital[0]}</h3>
+          <p>temperature {weather.main.temp} fahreheinght</p>
+          <img src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}/>
+          <p>wind {weather.wind.speed} m/s</p>
+      </>
+    )
+  } else {
+    return (
+      <>
+      <h3>{country.name.common}</h3>
+      <p key='p1'>
+            capital&nbsp;{country.capital[0]} <br></br>
             area&nbsp;{country.area}
           </p>
           <h4>languages</h4>
@@ -63,32 +103,10 @@ const CoutriesList = (props) => {
           <img src={country.flags.svg} alt={country.name.common} width='20%' />
       </>      
     )
-  } else {
-    props.setCapital('')
-    return
   }
-  
-}
 
-const CapitalWeather = (props) => {
-  console.log('capital', props.capital)
-  if (!props.capital || props.capital.length === 0){
-    return
-  }
+
   
-  const url = `http://api.openweathermap.org/data/2.5/weather?q=${props.capital}&appid=${import.meta.env.VITE_WEATHER_API}`
-  axios.get(url)
-    .then(x=> {      
-      return (
-        <>
-        <h3>Weather in {props.capital}</h3>
-        <p>temperature {x.data.main.temp} fahreheinght</p>
-        <img src={`https://openweathermap.org/img/wn/${x.data.weather[0].icon}@2x.png`}/>
-        <p>wind {x.data.wind.speed} m/s</p>
-        </>
-      )
-    })
-    .catch(x=>console.error('ERROR', x))
   
 }
 
@@ -113,13 +131,10 @@ const App = () => {
     setFilterText([event.target.id,'1'])
   }
 
-  const [capital, setCapital] = useState('')
-
   return (
     <div>
       <Filter filterTextChange={filterTextChange} filterText={filterText} />
-      <CoutriesList countries={countries} filterText={filterText} showCountry={showCountry} setCapital={setCapital} />
-      <CapitalWeather capital={capital} />
+      <CoutriesList countries={countries} filterText={filterText} showCountry={showCountry} />      
     </div>  
     
     //https://fullstackopen.com/en/part2/adding_styles_to_react_app
