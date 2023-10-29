@@ -1,141 +1,117 @@
 import { useEffect, useState } from "react"
 import axios from 'axios';
 
-const Filter = (props) =>{
+const Filter = ({filterTextOnChange, filterTextValue}) =>{
   return (
     <>
-    <label htmlFor="country">find countries&nbsp;</label>
-    <input type="text" name="country" id="country" onChange={props.filterTextChange} />      
-    </>
-    
+    <label htmlFor="country">
+      find countries&nbsp;
+    </label>
+    <input 
+      type="text" 
+      name="country" 
+      id="country" 
+      value={filterTextValue} 
+      onChange={filterTextOnChange} />      
+    </>    
   )
 }
 
-const CoutriesList = (props) => {  
-  if (props.filterText[0] === ''){
+const CountryList = ({countries, setCountriesFiltered}) => {
+  if (!countries){
     return
   }
-  
-  const countries = props.filterText[1] === '0' ?
-      props.countries.filter(x => x.name.common.toLowerCase().indexOf(props.filterText[0].toLowerCase()) !== -1)
-    :
-      props.countries.filter(x => x.name.common.toLowerCase() === props.filterText[0].toLowerCase())
-
   if (countries.length > 10){
     return <p>Too many matches, specify another filter</p>
   }
   if (countries.length > 1){
     return (
-      <>      
-        {countries.map(x => { return (          
+      <>
+        {countries.map(x => { return (
           <p key={x.name.common} id={x.name.common}>
-            {x.name.common}
-            &nbsp; 
-            <button type="button" onClick={props.showCountry} id={x.name.common}>show</button>
+            {x.name.common}&nbsp;
+            <button type="button" id={x.name.common} onClick={ () => setCountriesFiltered([x]) } >show</button>
           </p>
-        )        
-        })}      
+        )
+        })}
       </>
     )
   }
   if (countries.length == 1){
-    return (<Country country={countries[0]}/>)    
-  } else {    
-    return
-  }
-  
+    return <Country item={countries[0]} />
+  }  
 }
 
-const Country = ({country}) => {
+const Country = ({item}) => {
+  console.log('Country', item)
   const [weather, setWeather] = useState([])
-  
+  let change = ''
   useEffect( ()=> {
-    const url = `http://api.openweathermap.org/data/2.5/weather?q=${country.name.common}&appid=${import.meta.env.VITE_WEATHER_API}`
-    axios.get(url).then(x=>{setWeather(x.data)})
-  })
-
-    
-  if(weather.length > 0){    
-    return (
-      <>
-      <h3>{country.name.common}</h3>
+    const url = `http://api.openweathermap.org/data/2.5/weather?q=${item.capital[0]}&appid=${import.meta.env.VITE_WEATHER_API}&units=metric`    
+    axios.get(url)
+      .then( x => {setWeather(x.data)})
+      .catch(() => {setWeather({})})
+  }, [change])
+  change = 'c'
+  console.log('weather', weather)
+  return (
+    <>
+      <h3>{item.name.common}</h3>
       <p key='p1'>
-            capital&nbsp;{country.capital[0]} <br></br>
-            area&nbsp;{country.area}
+            capital&nbsp;{item.capital[0]} <br></br>
+            area&nbsp;{item.area}
           </p>
           <h4>languages</h4>
           <ul>
-            {Object.keys(country.languages).map( (key, index) => {
+            {Object.keys(item.languages).map( (key, index) => {
               return (
                 <li key={index}>                  
-                    {country.languages[key]}      
+                    {item.languages[key]}      
                 </li>
               );
             }
             )}
           </ul>          
-          <img src={country.flags.svg} alt={country.name.common} width='20%' />
-          <h3>Weather in {country.capital[0]}</h3>
-          <p>temperature {weather.main.temp} fahreheinght</p>
-          <img src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}/>
-          <p>wind {weather.wind.speed} m/s</p>
-      </>
-    )
-  } else {
-    return (
-      <>
-      <h3>{country.name.common}</h3>
-      <p key='p1'>
-            capital&nbsp;{country.capital[0]} <br></br>
-            area&nbsp;{country.area}
-          </p>
-          <h4>languages</h4>
-          <ul>
-            {Object.keys(country.languages).map( (key, index) => {
-              return (
-                <li key={index}>                  
-                    {country.languages[key]}      
-                </li>
-              );
-            }
-            )}
-          </ul>          
-          <img src={country.flags.svg} alt={country.name.common} width='20%' />
-      </>      
-    )
-  }
-
-
-  
-  
+          <img src={item.flags.svg} alt={item.name.common} width='20%' />
+          {
+            weather && weather.main && weather.main.temp && ( <div>
+              <h3>Weather in {item.capital[0]}</h3>
+              <p>temperature {weather.main.temp} Celsius</p>
+              <img src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}/>
+              <p>wind {weather.wind.speed} m/s</p>
+              </div>
+            )
+          }          
+    </>
+  )
 }
 
 const App = () => {
   const [countries, setCountries] = useState([])
-  const getCountries = ()=>{
+  useEffect(()=>{
     axios.get('https://studies.cs.helsinki.fi/restcountries/api/all')
     .then(x => {
-      setCountries(x.data)      
+      setCountries(x.data)
     } )
     .catch( () => {alert('Error')})
+  }, [])
+
+  const [countriesFiltered, setCountriesFiltered] = useState([])
+
+  const [filterText, setFilterText] = useState('')
+  const filterTextOnChange = (e) => {
+    setFilterText(e.target.value)
   }
+  useEffect( () => {
+    setCountriesFiltered(countries.filter(c => c.name.common.toLowerCase().indexOf(filterText.toLowerCase()) !== -1))
+  }, [filterText]
+  )
   
-  useEffect(getCountries, [])
-
-  const [filterText, setFilterText] = useState(['', '0'])
-  const filterTextChange = (event) => {
-    setFilterText([event.target.value,'0'])
-  }
- 
-  const showCountry = (event)=>{    
-    setFilterText([event.target.id,'1'])
-  }
-
   return (
-    <div>
-      <Filter filterTextChange={filterTextChange} filterText={filterText} />
-      <CoutriesList countries={countries} filterText={filterText} showCountry={showCountry} />      
-    </div>  
+    <>
+      <Filter filterTextValue={filterText} filterTextOnChange={filterTextOnChange} />
+      <CountryList countries={countriesFiltered} setCountriesFiltered={setCountriesFiltered} />
+    </>  
     
     //https://fullstackopen.com/en/part2/adding_styles_to_react_app
   )
