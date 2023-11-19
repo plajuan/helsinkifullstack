@@ -9,7 +9,7 @@
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "server": "json-server -p3001 --watch db.json",
-    "deploy": "rm -rfv dist ~/dev/helsinkifullstack_backend/public && npm run build && cp -R dist ~/dev/helsinkifullstack_backend"
+    "deploy": "rm -rfv dist ~/dev/helsinkifullstack_backend/dist && npm run build && cp -R dist ~/dev/helsinkifullstack_backend"
   },
   "dependencies": {
     "axios": "^1.5.1",
